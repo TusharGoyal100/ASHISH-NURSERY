@@ -3,6 +3,7 @@ const ejsMate=require('ejs-mate');
 const path=require('path');
 const mongoose=require('mongoose');
 const Plants=require('./models/plants');
+const methodOverride=require('method-override')
 
 const app=express();
 
@@ -20,7 +21,8 @@ app.engine('ejs',ejsMate);
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'));
 
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({extended:true}));
+app.use(methodOverride('_method'));
 
 app.get('/',(req,res)=>{
     res.render('home');
@@ -47,6 +49,25 @@ app.get('/plants/:id',async(req,res)=>{
     const {id}=req.params;
     const plant=await Plants.findById(id);
     res.render('plants/show',{plant});
+})
+
+app.put('/plants/:id',async(req,res)=>{
+    const {id}=req.params;
+    const plant=await Plants.findByIdAndUpdate(id,{...req.body.plant});
+    await plant.save();
+    res.redirect(`/plants/${plant._id}`);
+})
+
+app.delete('/plants/:id',async(req,res)=>{
+    const {id}=req.params;
+    await Plants.findByIdAndDelete(id);
+    res.redirect('/plants');
+})
+
+app.get('/plants/:id/edit',async(req,res)=>{
+    const {id}=req.params;
+    const plant=await Plants.findById(id);
+    res.render('plants/edit',{plant});
 })
 
 

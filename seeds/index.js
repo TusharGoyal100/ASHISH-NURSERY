@@ -18,7 +18,9 @@ const seedDB=async()=>{
     {
        const plant=new Plant({
            title:`${plants[i].title}`,
-           image:`${plants[i].image}`
+           image:`${plants[i].image}`,
+           price:10,
+           description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora perspiciatis saepe laboriosam quas atque, dolore culpa sunt illo veritatis? Nihil voluptatem officiis vitae ducimus neque hic omnis quidem amet praesentium."
        })
 
        await plant.save();

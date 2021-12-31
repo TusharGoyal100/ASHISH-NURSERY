@@ -4,7 +4,9 @@ const Schema=mongoose.Schema;
 
 const PlantSchema=new Schema({
    title:String,
-   image:String
+   image:String,
+   price:Number,
+   description:String
 })
 
 

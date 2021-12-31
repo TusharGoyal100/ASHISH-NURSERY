@@ -3,3 +3,10 @@
 <h1><%=plant.title%> </h1>
 
 <img src="<%=plant.image%>" alt="">
+
+
+<a href="/plants/<%=plant._id%>/edit">Edit</a>;
+
+<form action="/plants/<%=plant._id%>?_method=DELETE" method="post">
+    <button>Delete</button>
+</form>
