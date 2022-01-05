@@ -1,15 +1,62 @@
 <%layout('layouts/boilerplate')%> 
 
 <div class="container">
-    <form action="/plants" method="post">
+  <div class="row">
+    <div class="col-md-6 offset-md-3 mb-3">
+    <h1>NEW PLANT</h1>
+    <form action="/plants" class="needs-validation" method="post" novalidate>
         <div class="mb-3">
           <label for="title" class="form-label">Plant-Name</label>
-          <input type="text" class="form-control" id="title" name="plant[title]">
+          <input type="text" class="form-control" id="title" name="plant[title]" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input type="number" class="form-control" id="price" name="plant[price]" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
         </div>
         <div class="mb-3">
           <label for="image" class="form-label">Image-Url</label>
-          <input type="text" class="form-control" id="image" name="plant[image]">
+          <input type="text" class="form-control" id="image" name="plant[image]" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea type="text" class="form-control" id="description" name="plant[description]" required></textarea>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+    </div>
+  </div>
 </div>
+
+<script>
+  (function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+</script>

@@ -14,6 +14,7 @@ mongoose.connect(dbUrl)
 })
 
 const seedDB=async()=>{
+    await Plant.deleteMany({});
     for(let i=0;i<11;i++)
     {
        const plant=new Plant({
