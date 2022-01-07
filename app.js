@@ -6,6 +6,7 @@ const Plants=require('./models/plants');
 const methodOverride=require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const catchAsync=require('./utils/catchAsync');
+const {validatePlant}=require('./middleware')
 
 const app=express();
 
@@ -38,7 +39,8 @@ app.get('/plants',catchAsync(async(req,res)=>{
     res.render('plants/index',{plants});
 }))
 
-app.post('/plants',catchAsync(async(req,res)=>{
+app.post('/plants',validatePlant,catchAsync(async(req,res)=>{
+
     const plant=new Plants(req.body.plant);
     await plant.save();
     res.redirect(`/plants/${plant._id}`);
@@ -55,7 +57,7 @@ app.get('/plants/:id',catchAsync(async(req,res)=>{
     res.render('plants/show',{plant});
 }))
 
-app.put('/plants/:id',catchAsync(async(req,res)=>{
+app.put('/plants/:id',validatePlant,catchAsync(async(req,res)=>{
     const {id}=req.params;
     const plant=await Plants.findByIdAndUpdate(id,{...req.body.plant});
     await plant.save();
