@@ -3,10 +3,11 @@ const ejsMate=require('ejs-mate');
 const path=require('path');
 const mongoose=require('mongoose');
 const Plants=require('./models/plants');
+const Review=require('./models/review')
 const methodOverride=require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const catchAsync=require('./utils/catchAsync');
-const {validatePlant}=require('./middleware')
+const {validatePlant,validateReview}=require('./middleware')
 
 const app=express();
 
@@ -26,6 +27,7 @@ app.set('views',path.join(__dirname,'views'));
 
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/',(req,res)=>{
     res.render('home');
@@ -74,6 +76,15 @@ app.get('/plants/:id/edit',catchAsync(async(req,res)=>{
     const {id}=req.params;
     const plant=await Plants.findById(id);
     res.render('plants/edit',{plant});
+}))
+
+app.post('/plants/:id/reviews',validateReview,catchAsync(async(req,res)=>{
+    const plant=await Plants.findById(req.params.id);
+    const review=await new Review(req.body.review);
+    plant.reviews.push(review);
+    await review.save();
+    await plant.save();
+    res.redirect(`/plants/${plant._id}`);
 }))
 
 
