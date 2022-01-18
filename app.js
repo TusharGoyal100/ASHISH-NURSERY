@@ -55,7 +55,7 @@ app.get('/plants/new',async(req,res)=>{
 
 app.get('/plants/:id',catchAsync(async(req,res)=>{
     const {id}=req.params;
-    const plant=await Plants.findById(id);
+    const plant=await Plants.findById(id).populate('reviews');
     res.render('plants/show',{plant});
 }))
 
@@ -86,6 +86,13 @@ app.post('/plants/:id/reviews',validateReview,catchAsync(async(req,res)=>{
     await plant.save();
     res.redirect(`/plants/${plant._id}`);
 }))
+
+app.delete('/plants/:id/reviews/:reviewId',async(req,res)=>{
+    const {id,reviewId}=req.params;
+    await Plants.findByIdAndUpdate(id,{$pull:{reviews:reviewId}})
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/plants/${id}`);
+})
 
 
 app.all('*',(req,res,next)=>{
