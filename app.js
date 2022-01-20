@@ -9,7 +9,8 @@ const ExpressError = require('./utils/ExpressError');
 const catchAsync=require('./utils/catchAsync');
 const {validatePlant,validateReview}=require('./middleware')
 
-const app=express();
+const plantRoutes=require('./routes/plants');
+const reviewRoutes=require('./routes/reviews');
 
 const dbUrl='mongodb://localhost:27017/ashish-nursery';
 mongoose.connect(dbUrl)
@@ -21,6 +22,8 @@ mongoose.connect(dbUrl)
     console.log(err);
 })
 
+
+const app=express();
 app.engine('ejs',ejsMate);
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'));
@@ -29,69 +32,12 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname,'public')));
 
+
+app.use('/plants',plantRoutes);
+app.use('/plants/:id/reviews',reviewRoutes);
+
 app.get('/',(req,res)=>{
     res.render('home');
-})
-
-
-
-
-app.get('/plants',catchAsync(async(req,res)=>{
-    const plants=await Plants.find();
-    res.render('plants/index',{plants});
-}))
-
-app.post('/plants',validatePlant,catchAsync(async(req,res)=>{
-
-    const plant=new Plants(req.body.plant);
-    await plant.save();
-    res.redirect(`/plants/${plant._id}`);
-}))
-
-app.get('/plants/new',async(req,res)=>{
-    res.render('plants/new');
-})
-
-
-app.get('/plants/:id',catchAsync(async(req,res)=>{
-    const {id}=req.params;
-    const plant=await Plants.findById(id).populate('reviews');
-    res.render('plants/show',{plant});
-}))
-
-app.put('/plants/:id',validatePlant,catchAsync(async(req,res)=>{
-    const {id}=req.params;
-    const plant=await Plants.findByIdAndUpdate(id,{...req.body.plant});
-    await plant.save();
-    res.redirect(`/plants/${plant._id}`);
-}))
-
-app.delete('/plants/:id',catchAsync(async(req,res)=>{
-    const {id}=req.params;
-    await Plants.findByIdAndDelete(id);
-    res.redirect('/plants');
-}))
-
-app.get('/plants/:id/edit',catchAsync(async(req,res)=>{
-    const {id}=req.params;
-    const plant=await Plants.findById(id);
-    res.render('plants/edit',{plant});
-}))
-
-app.post('/plants/:id/reviews',validateReview,catchAsync(async(req,res)=>{
-    const plant=await Plants.findById(req.params.id);
-    const review=await new Review(req.body.review);
-    plant.reviews.push(review);
-    await review.save();
-    await plant.save();
-    res.redirect(`/plants/${plant._id}`);
-}))
-
-app.delete('/plants/:id/reviews/:reviewId',async(req,res)=>{
-    const {id,reviewId}=req.params;
-    await Plants.findByIdAndUpdate(id,{$pull:{reviews:reviewId}})
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/plants/${id}`);
 })
 
 
