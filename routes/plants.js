@@ -1,8 +1,8 @@
 const express=require('express');
 const router=express.Router();
-const {validatePlant}=require('../middleware');
+const {validatePlant,validateId}=require('../middleware');
 const catchAsync=require('../utils/catchAsync');
-const plants=require('../controllers/plants')
+const plants=require('../controllers/plants');
 
 router.route('/')
       .get(catchAsync(plants.index))
@@ -11,11 +11,11 @@ router.route('/')
 router.get('/new',plants.renderNewForm)
 
 router.route('/:id')
-      .get(catchAsync(plants.showPlants))
-      .put(validatePlant,catchAsync(plants.updatePlants))
-      .delete(catchAsync(plants.deletePlants))
+      .get(validateId,catchAsync(plants.showPlants))
+      .put(validateId,validatePlant,catchAsync(plants.updatePlants))
+      .delete(validateId,catchAsync(plants.deletePlants))
 
-router.get('/:id/edit',catchAsync(plants.renderEditForm))
+router.get('/:id/edit',validateId,catchAsync(plants.renderEditForm))
 
 
 

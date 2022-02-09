@@ -1,6 +1,6 @@
 const {plantSchema,reviewSchema}=require('./schemas');
 const ExpressError = require('./utils/ExpressError');
-
+const ObjectId = require('mongoose').Types.ObjectId;
 
 
 
@@ -25,4 +25,18 @@ module.exports.validateReview=(req,res,next)=>{
      }
     
     return next();
+ }
+
+
+ module.exports.validateId=(req,res,next)=>{
+      const {id} =req.params;
+      if(id)
+      {
+          if(!ObjectId.isValid(id))
+          {
+               req.flash('error','Cannot find that plant');
+               return res.redirect('/plants'); 
+          }
+      }
+      return next();
  }

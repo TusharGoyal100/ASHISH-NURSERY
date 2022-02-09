@@ -1,5 +1,5 @@
 const Plants=require('../models/plants');
-const ObjectId = require('mongoose').Types.ObjectId;
+
 
 
 
@@ -23,9 +23,8 @@ module.exports.renderNewForm=(req,res)=>{
 
 module.exports.showPlants=async(req,res)=>{
     const {id}=req.params;
-    let plant;
-    if(ObjectId.isValid(id))
-    {plant=await Plants.findById(id).populate('reviews');}
+    
+    const plant=await Plants.findById(id).populate('reviews');
     if(!plant)
     {
         req.flash('error','Cannot find that plant');

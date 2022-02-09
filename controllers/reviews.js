@@ -8,6 +8,7 @@ module.exports.createReview=async(req,res)=>{
     plant.reviews.push(review);
     await review.save();
     await plant.save();
+    req.flash('success','Created new review!')
     res.redirect(`/plants/${plant._id}`);
 }
 
@@ -15,5 +16,6 @@ module.exports.deleteReview=async(req,res)=>{
     const {id,reviewId}=req.params;
     await Plants.findByIdAndUpdate(id,{$pull:{reviews:reviewId}})
     await Review.findByIdAndDelete(reviewId);
+    req.flash('success','Successfully deleted review');
     res.redirect(`/plants/${id}`);
 }
