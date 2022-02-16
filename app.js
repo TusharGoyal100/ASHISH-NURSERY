@@ -12,7 +12,7 @@ const User=require('./models/user')
 
 const plantRoutes=require('./routes/plants');
 const reviewRoutes=require('./routes/reviews');
-
+const userRoutes=require('./routes/user');
 
 const dbUrl='mongodb://localhost:27017/ashish-nursery';
 mongoose.connect(dbUrl)
@@ -40,6 +40,11 @@ const sessionConfig={
     secret:"thisisnotmysecret",
     resave:false,
     saveUninitialized:true,
+    cookie:{
+        httpOnly:true,
+        expires:Date.now()+1000*60*60*24*7,
+        maxAge:1000*60*60*24*7
+    }
 }
 
 app.use(session(sessionConfig));
@@ -53,7 +58,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
-   
+    
+    res.locals.currentUser=req.user;
     res.locals.success=req.flash('success');
     res.locals.error=req.flash('error');
     return next();
@@ -62,7 +68,7 @@ app.use((req,res,next)=>{
 
 
 
-
+app.use('/',userRoutes);
 app.use('/plants',plantRoutes);
 app.use('/plants/:id/reviews',reviewRoutes);
 
