@@ -5,7 +5,7 @@ module.exports.renderRegister=(req,res)=>{
     res.render('users/register');
 };
 
-module.exports.register=async(req,res)=>{
+module.exports.register=async(req,res,next)=>{
     try{
     const {username,email,password}=req.body;
     if(!email)
@@ -14,9 +14,11 @@ module.exports.register=async(req,res)=>{
     }
     const user=new User({username,email});
     const newUser=await User.register(user,password);
-    req.flash('success','successfully registered');
-    console.log(newUser);
-    res.redirect('/plants');
+    req.login(newUser,err=>{
+        if(err)return next(err);
+        req.flash('success','successfully registered');
+        res.redirect('/plants');
+    })
     }
     catch(e)
     {
@@ -31,7 +33,9 @@ module.exports.renderLogin=(req,res)=>{
 
 module.exports.login=(req,res)=>{
     req.flash('success','successfully logged in');
-    res.redirect('/plants');                                                                        
+    const redirectUrl=req.session.returnTo || '/plants';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);                                                                        
  }
 
  module.exports.logout=(req,res)=>{

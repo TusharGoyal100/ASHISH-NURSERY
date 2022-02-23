@@ -10,13 +10,16 @@
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">$<%=plant.price%></li>
+      <li class="list-group-item">Sumitted by <%=plant.author.username%></li>
     </ul>
+    <% if(currentUser&&plant.author.equals(currentUser._id)){%> 
     <div class="card-body">
       <a href="/plants/<%=plant._id%>/edit" class="card-link btn btn-info">Edit</a>
       <form class="d-inline" action="/plants/<%=plant._id%>?_method=DELETE" method="post">
         <button class="btn btn-danger">Delete</button>
     </form>
     </div>
+    <% } %> 
   </div>
 </div>
   <div class="col-6">
@@ -39,9 +42,11 @@
       <div class="card-body">
         <h5 class="card-title"><%=review.rating%></h5>
         <p class="card-text"><%=review.body%></p>
+        <% if(currentUser&&review.author.equals(currentUser._id)){ %> 
         <form class="d-inline" action="/plants/<%=plant._id%>/reviews/<%=review._id%>?_method=DELETE" method="post">
         <button class="btn btn-danger">DELETE</button>
       </form>
+      <% } %> 
       </div>
     </div>
     <% } %> 

@@ -11,6 +11,7 @@ module.exports.index=async(req,res)=>{
 module.exports.createPlants=async(req,res)=>{
 
     const plant=new Plants(req.body.plant);
+    plant.author=req.user._id;
     await plant.save();
     req.flash('success','successfully added a plant');
     res.redirect(`/plants/${plant._id}`);
@@ -24,7 +25,12 @@ module.exports.renderNewForm=(req,res)=>{
 module.exports.showPlants=async(req,res)=>{
     const {id}=req.params;
     
-    const plant=await Plants.findById(id).populate('reviews');
+    const plant=await Plants.findById(id).populate({
+        path:'reviews',
+        populate:{
+            path:'author'
+        }
+    }).populate('author');
     if(!plant)
     {
         req.flash('error','Cannot find that plant');
@@ -51,10 +57,5 @@ module.exports.deletePlants=async(req,res)=>{
 module.exports.renderEditForm=async(req,res)=>{
     const {id}=req.params;
     const plant=await Plants.findById(id);
-    if(!plant)
-    {
-        req.flash('error','Cannot find that plant');
-        return res.redirect('/plants');
-    }
     res.render('plants/edit',{plant});
 }

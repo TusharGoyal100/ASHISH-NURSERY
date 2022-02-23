@@ -21,8 +21,9 @@ const seedDB=async()=>{
            title:`${plants[i].title}`,
            image:`${plants[i].image}`,
            price:10,
-           description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora perspiciatis saepe laboriosam quas atque, dolore culpa sunt illo veritatis? Nihil voluptatem officiis vitae ducimus neque hic omnis quidem amet praesentium."
-       })
+           description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora perspiciatis saepe laboriosam quas atque, dolore culpa sunt illo veritatis? Nihil voluptatem officiis vitae ducimus neque hic omnis quidem amet praesentium.",
+           author:'620daeefe5cd33f86f70919c'
+        })
 
        await plant.save();
       

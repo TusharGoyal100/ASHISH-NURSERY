@@ -1,10 +1,12 @@
 const Plants=require('../models/plants');
+const review = require('../models/review');
 const Review=require('../models/review');
 
 
 module.exports.createReview=async(req,res)=>{
     const plant=await Plants.findById(req.params.id);
     const review=await new Review(req.body.review);
+    review.author=req.user._id;
     plant.reviews.push(review);
     await review.save();
     await plant.save();
