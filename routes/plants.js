@@ -11,9 +11,9 @@ router.route('/')
 router.get('/new',isLoggedIn,plants.renderNewForm)
 
 router.route('/:id')
-      .get(validateId,isLoggedIn,catchAsync(plants.showPlants))
+      .get(validateId,catchAsync(plants.showPlants))
       .put(validateId,isLoggedIn,isAuthor,validatePlant,catchAsync(plants.updatePlants))
-      .delete(validateId,isAuthor,catchAsync(plants.deletePlants))
+      .delete(validateId,isLoggedIn,isAuthor,catchAsync(plants.deletePlants))
 
 router.get('/:id/edit',isLoggedIn,isAuthor,validateId,catchAsync(plants.renderEditForm))
 

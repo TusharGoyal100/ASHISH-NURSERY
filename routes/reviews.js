@@ -5,8 +5,8 @@ const catchAsync=require('../utils/catchAsync');
 const reviews=require('../controllers/reviews')
 
 
-router.post('/',validateReview,validateId,isLoggedIn,catchAsync(reviews.createReview))
+router.post('/',isLoggedIn,validateReview,validateId,catchAsync(reviews.createReview))
 
-router.delete('/:reviewId',validateId,isReviewAuthor,catchAsync(reviews.deleteReview))
+router.delete('/:reviewId',isLoggedIn,validateId,isReviewAuthor,catchAsync(reviews.deleteReview))
 
 module.exports=router;
