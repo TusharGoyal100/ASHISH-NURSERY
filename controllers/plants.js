@@ -9,8 +9,8 @@ module.exports.index=async(req,res)=>{
 };
 
 module.exports.createPlants=async(req,res)=>{
-
     const plant=new Plants(req.body.plant);
+    plant.image=req.files.map(f=>({ url:f.path,filename:f.filename }));
     plant.author=req.user._id;
     await plant.save();
     req.flash('success','successfully added a plant');

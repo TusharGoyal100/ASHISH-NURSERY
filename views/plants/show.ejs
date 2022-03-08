@@ -4,7 +4,9 @@
 <div class="row">
   <div class="col-6">
 <div class="card mb-3 " style="width: 30rem;">
-    <img src="<%=plant.image%>" class="card-img-top img-fluid" alt="...">
+  <% for(let image of plant.image) {%> 
+    <img src="<%=image.url%>" class="card-img-top img-fluid" alt="...">
+    <% } %> 
     <div class="card-body">
       <h5 class="card-title"><%=plant.title%> </h5>
       <p class="card-text"><%=plant.description%> </p>

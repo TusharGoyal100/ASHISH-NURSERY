@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const mongoose=require('mongoose');
 const Reviews=require('./review');
 const Schema=mongoose.Schema;
@@ -5,7 +6,12 @@ const Schema=mongoose.Schema;
 
 const PlantSchema=new Schema({
    title:String,
-   image:String,
+   image:[
+      {
+         url:String,
+         filename:String
+      }
+   ],
    price:Number,
    description:String,
    author:{
