@@ -15,7 +15,7 @@ router.get('/new',isLoggedIn,plants.renderNewForm)
 
 router.route('/:id')
       .get(validateId,catchAsync(plants.showPlants))
-      .put(validateId,isLoggedIn,isAuthor,validatePlant,catchAsync(plants.updatePlants))
+      .put(validateId,isLoggedIn,isAuthor,upload.array('image'),validatePlant,catchAsync(plants.updatePlants))
       .delete(validateId,isLoggedIn,isAuthor,catchAsync(plants.deletePlants))
 
 router.get('/:id/edit',isLoggedIn,isAuthor,validateId,catchAsync(plants.renderEditForm))

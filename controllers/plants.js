@@ -13,6 +13,7 @@ module.exports.createPlants=async(req,res)=>{
     plant.image=req.files.map(f=>({ url:f.path,filename:f.filename }));
     plant.author=req.user._id;
     await plant.save();
+    console.log(plant);
     req.flash('success','successfully added a plant');
     res.redirect(`/plants/${plant._id}`);
 }
@@ -42,6 +43,8 @@ module.exports.showPlants=async(req,res)=>{
 module.exports.updatePlants=async(req,res)=>{
     const {id}=req.params;
     const plant=await Plants.findByIdAndUpdate(id,{...req.body.plant});
+    const imgs=req.files.map(f=>({ url:f.path,filename:f.filename }));
+    plant.image.push(...imgs);
     await plant.save();
     req.flash('success','successfully updated a plant information');
     res.redirect(`/plants/${plant._id}`);
